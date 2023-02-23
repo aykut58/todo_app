@@ -18,12 +18,18 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
-  final toDoService = ToDoService();
-  late Future<List<TodoModel>> future;
+  
+  final toDoService = ToDoService(); /// servis sınıfında bir nesne oluşturuyoruz.
+  /// Futurebuilder bizden future bekliyor bizde tüm todoları çeken future tanımlıyoruz.
+  /// late vermemin sebebi başlangıçta null olabilir ama ileride mutlaka bir değer alacak
+  /// burada ?'de kullanılabilir.
+  late Future<List<TodoModel>> future; 
 
  @override  
 void initState() 
 {
+  /// initState sayfa çağrıldığında sayfa yüklenmeden oluşan method.
+  /// veri çağırma işlemleri bu bölümde yapılır sayfa yüklenmeden veri alınmış olsun.
    super.initState();
   future = toDoService.tumTodo();
 }

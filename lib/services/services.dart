@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable
+
 import 'dart:convert';
 
 import 'package:http/http.dart' as http;
@@ -67,16 +69,27 @@ class ToDoService
 
    Future<ToDoAddResponse> todoAdd (ToDoAddRequest toDoRequest) async 
   {
-    print("servis çalıştı");
-
+    
+    /// url birleştiriliyor ve parse ediliyor.
     final url = Uri.parse(baseUrl + path); 
 
-
+    /// HTTP GET metodunu kullanarak bir İstek(Request)'te bulunuyoruz.
+    /// Bu isteğe karşılık REST API'den gelecek olan Yanıt(Response)'ı
+    /// response isimli değişkene atıyoruz.
     final response = await http.post(url , headers: requestHeaders , body: jsonEncode(toDoRequest));
+
+    /// Gelen Yanıt (Response)'ın body'si bize String olarak döner.
     final responseBody = response.body;
-    print("response : ${response.body}");
+
+
     final result = jsonDecode(responseBody);
+
+    /// Response sınıfında bir nesne oluşturuoyruz.
     ToDoAddResponse toDoResponse = ToDoAddResponse();
+
+    /// responseden veriye göreye "successful" değerini true yapıyoruz.
+    /// truee olması demek görevin yapıldığı anlamına gelecek
+    /// ona göre tasrımda değişiklik sağlayacağız.
     toDoResponse.successful=response.statusCode == 201;
     if(response.statusCode == 201)
     {
@@ -85,21 +98,22 @@ class ToDoService
     }
     else
     {
+      /// istek başarılı dönmemesi halinde hata kodu fırlatıyor.
       throw Exception(
         'Veriler alınamadı. Hata Kodu: ${response.statusCode}',
       );
     }
+
      return Future.value(toDoResponse);
   }
 
   Future<ToDoUpdateResponse> todoUpdate(ToDoUpdateRequest toDoUpdateRequest , String id ) async 
   {
-    final url = Uri.parse(baseUrl + path + "/"+ id); 
-    print("tam url : $url");
-    print("request : $toDoUpdateRequest");
+    final url = Uri.parse("$baseUrl$path/$id"); 
+
     final response = await http.put(url , headers: requestHeaders , body: jsonEncode(toDoUpdateRequest));
     final responseBody = response.body;
-    print(response.body);
+    
     final result = jsonDecode(responseBody);
     ToDoUpdateResponse toDoUpdateResponse = ToDoUpdateResponse();
     if(response.statusCode == 200) 
@@ -118,7 +132,7 @@ class ToDoService
 
   Future<TodoDeleteResponse> toDoDelete(String id) async 
   {
-    final url = Uri.parse(baseUrl + path + "/"+ id); 
+    final url = Uri.parse("$baseUrl$path/$id"); 
     final response = await http.delete(url);
      final responseBody = response.body;
     final result = jsonDecode(responseBody);
